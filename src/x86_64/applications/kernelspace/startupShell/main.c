@@ -105,6 +105,10 @@ void kb_isr() {
        if (bufcmp("REBOOT\0")) {
             __asm__ __volatile__("mov $0x0, %eax; int $0x80");
        }
+
+       if (prompt_mode) {
+           reset_prompt();
+       }
     }
  
 
