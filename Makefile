@@ -1,8 +1,9 @@
 all:
 	nasm -felf32 src/x86_64/kernel/memory/GDT.S -o obj/asmgdt.o
 	nasm -felf32 src/x86_64/kernel/interrupts/syscalls/syscall_dispatcher.S -o obj/sysc_disp.o
-	nasm -fbin src/x86_64/modules/test.S -o Toxic/modules/test.bin
+	nasm -felf32 src/x86_64/applications/kernelspace/startupShell/shellutils.S -o obj/ssShellutils.o
 	gcc -c -m32 src/x86_64/kernel/kmain.c -mgeneral-regs-only -ffreestanding -fno-pie -fstack-protector -o obj/kmain.o
+	gcc -c -m32 src/x86_64/applications/kernelspace/startupShell/main.c -ffreestanding -fno-pie -fstack-protector -o obj/startupShell.o
 	gcc -c -m32 src/x86_64/kernel/drivers/impl/IO.c -ffreestanding -fno-pie -fstack-protector -o obj/io.o
 	gcc -c -m32 src/x86_64/kernel/drivers/impl/VGA.c -ffreestanding -fno-pie -fstack-protector -o obj/vga.o
 	gcc -c -m32 src/x86_64/kernel/util/impl/strings.c -ffreestanding -fno-pie -fstack-protector -o obj/strings.o

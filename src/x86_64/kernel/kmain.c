@@ -1,5 +1,6 @@
 #define _KERNEL_START
 
+char* vga_main = (char*)0xB8000;
 
 #include "drivers/VGA.h"
 #include "drivers/IO.h"
@@ -12,8 +13,6 @@
 
 #define SW 80
 
-char* vga_main = (char*)0xB8000;
-
 static void unmask_kb_irq() {
     outportb(PIC1_DATA_PORT, 0xFD);
 }
@@ -25,8 +24,7 @@ static void kb_isr_stub() {
 
 void _syscall_dispatcher();
 
-
-typedef void (*mod_call_t)();
+int _ssmain();
 
 int _start() {   
     _gdt_install();
@@ -39,13 +37,19 @@ int _start() {
     __asm__ __volatile__("sti");
 
     vga_clear(&vga_main, 0x1, 0xE); 
+
+    /*
     vga_puts("Drives Detected: ", &vga_main, 1);
     vga_puts("", &vga_main, 1);
     floppy_detect_drives();
 
     vga_main += 120;
+    */
 
     vga_puts("Kernel Initialized.", &vga_main, 1);
+    vga_puts("", &vga_main, 1);
+
+    _ssmain();      // Run the kernel space startup shell.
 
     return 0;
 }

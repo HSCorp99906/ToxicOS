@@ -1,12 +1,13 @@
 #ifndef SYSCALLS_H
 #define SYSCALLS_H
 
-#define MAX_SYSCALLS 3
+#define MAX_SYSCALLS 4
 
 #include "../../drivers/IO.h"
 #include "../../drivers/VGA.h"
 #include "../IDT.h"
 #include "../../util/types.h"
+
 
 void syscall_restart() {
     outportb(0x64, 0xFE);
@@ -26,10 +27,18 @@ void syscall_change_kb_isr() {
 }
 
 
+void syscall_puts() {
+    register char* str asm("ecx");
+    register unsigned char newlineBool asm("ebx");
+    vga_puts(str, &vga_main, newlineBool);
+}
+
+
 void* syscalls[MAX_SYSCALLS] = {
     syscall_restart,
     syscall_change_kb_isr,
     syscall_curs_move,
+    syscall_puts
 };
 
 #endif
