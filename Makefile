@@ -8,4 +8,5 @@ all:
 	i686-elf-ld -m elf_i386 -T link.ld obj/*.o -o Toxic/boot/kernel.bin
 	grub-mkrescue -o ToxicOS.iso Toxic/
 	sudo dd bs=4M if=ToxicOS.iso of=/dev/sdb
+	rm ToxicOS.iso
 	sudo qemu-system-x86_64 -hdb /dev/sdb
