@@ -1,7 +1,7 @@
 #ifndef SYSCALLS_H
 #define SYSCALLS_H
 
-#define MAX_SYSCALLS 4
+#define MAX_SYSCALLS 6
 
 #include "../../drivers/IO.h"
 #include "../../drivers/VGA.h"
@@ -33,12 +33,29 @@ void syscall_puts() {
     vga_puts(str, &vga_main, newlineBool);
 }
 
+void syscall_putc() {
+    register char ch asm("ecx");
+    register unsigned char newlineBool asm("ebx");
+    char str[2] = "\0\0";
+    str[0] = ch;
+    vga_puts(str, &vga_main, newlineBool);
+    vga_main -= 2;
+}
+
+
+void syscall_popc() {
+    vga_main -= 2;
+    *vga_main = ' ';
+}
+
 
 void* syscalls[MAX_SYSCALLS] = {
     syscall_restart,
     syscall_change_kb_isr,
     syscall_curs_move,
-    syscall_puts
+    syscall_puts,
+    syscall_putc,
+    syscall_popc,
 };
 
 #endif

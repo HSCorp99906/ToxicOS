@@ -1,10 +1,13 @@
 global _destub_kb_isr
 global curs_move
 global put_prompt
+global send_pic_eoi
+global get_key
+global putch
 
 _destub_kb_isr:
-    mov ecx, [esp + 4]
-    mov eax, 0x2
+    mov eax, 0x1
+    mov ecx, [esp + 4] 
     int 0x80
     ret
 
@@ -20,4 +23,16 @@ put_prompt:
     mov ecx, [esp + 4]
     mov ebx, 0
     int 0x80
+    ret
+
+putch:
+    mov eax, 0x4
+    mov ecx, [esp + 4]
+    mov ebx, 0
+    int 0x80
+    ret
+
+send_pic_eoi:
+    mov al, 0x20
+    out 0x20, al
     ret

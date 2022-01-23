@@ -19,6 +19,7 @@ static void unmask_kb_irq() {
 
 
 static void kb_isr_stub() {
+    inportb(0x60);
     outportb(0x20, 0x20);
 }
 
@@ -29,12 +30,12 @@ int _ssmain();
 int _start() {   
     _gdt_install();
     idt_install();
-
+ 
     set_idt_desc32(0x0, div_by_0_handler, TRAP_GATE_FLAGS);
     set_idt_desc32(0x21, kb_isr_stub, INT_GATE_FLAGS);
-    set_idt_desc32(0x80, _syscall_dispatcher, INT_GATE_FLAGS); 
+    set_idt_desc32(0x80, _syscall_dispatcher, INT_GATE_FLAGS);  
     unmask_kb_irq();
-    __asm__ __volatile__("sti");
+    __asm__ __volatile__("sti"); 
 
     vga_clear(&vga_main, 0x1, 0xE); 
 
