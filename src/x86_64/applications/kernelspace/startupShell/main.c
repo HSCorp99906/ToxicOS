@@ -114,6 +114,10 @@ void kb_isr() {
             clear_prompt();
             prompt_mode = 0;
             __asm__ __volatile__("mov $0x7, %eax; int $0x80");
+       } else if (bufcmp("JOKE")) {
+            clear_prompt();
+            prompt_mode = 0;
+            put_prompt("PLEASE WORK.");
        }
 
        if (prompt_mode) {
