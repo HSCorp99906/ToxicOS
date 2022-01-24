@@ -10,6 +10,7 @@ void put_prompt(char* prompt);
 void send_pic_eoi();
 void putch(char ch);
 void _destub_kb_isr(void* fptr);
+void newline();
 // END
 
 
@@ -53,6 +54,11 @@ static unsigned short buflen() {
     return buflen;
 }
 
+static void bufclear() {
+    for (int i = 0; i < buflen() + 1; ++i) {
+        buffer[i] = '\0'; 
+    }
+}
 
 static void reset_prompt() {
      for (int i = 0; i < buflen() + 1; ++i) {
@@ -104,11 +110,22 @@ void kb_isr() {
     } else if (scancode == 28 && prompt_mode) {
        if (bufcmp("REBOOT\0")) {
             __asm__ __volatile__("mov $0x0, %eax; int $0x80");
+       } else if (bufcmp("DISKS\0")) {
+            clear_prompt();
+            prompt_mode = 0;
+            __asm__ __volatile__("mov $0x7, %eax; int $0x80");
        }
 
        if (prompt_mode) {
            reset_prompt();
        }
+    } else if (!(prompt_mode) && scancode == 1) {
+        __asm__ __volatile__("mov $0x6, %eax; int $0x80");
+        newline();
+        put_prompt("Kernel@ToxicOS~$ ");
+        reset_cursor();
+        prompt_mode = 1;
+        bufclear();
     }
  
 

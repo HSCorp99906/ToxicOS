@@ -1,7 +1,7 @@
 #ifndef SYSCALLS_H
 #define SYSCALLS_H
 
-#define MAX_SYSCALLS 6
+#define MAX_SYSCALLS 8
 
 #include "../../drivers/IO.h"
 #include "../../drivers/VGA.h"
@@ -49,6 +49,18 @@ void syscall_popc() {
 }
 
 
+void reset_vga() {
+    vga_clear(&vga_main, 0x1, 0xE);
+    vga_puts("Kernel Initialized.", &vga_main, 1);
+    vga_puts("", &vga_main, 1);
+}
+
+
+void display_disks() {
+    floppy_detect_drives();
+}
+
+
 void* syscalls[MAX_SYSCALLS] = {
     syscall_restart,
     syscall_change_kb_isr,
@@ -56,6 +68,8 @@ void* syscalls[MAX_SYSCALLS] = {
     syscall_puts,
     syscall_putc,
     syscall_popc,
+    reset_vga,
+    display_disks,
 };
 
 #endif

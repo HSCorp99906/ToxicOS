@@ -4,6 +4,7 @@ global put_prompt
 global send_pic_eoi
 global get_key
 global putch
+global newline
 
 _destub_kb_isr:
     mov eax, 0x1
@@ -35,4 +36,10 @@ putch:
 send_pic_eoi:
     mov al, 0x20
     out 0x20, al
+    ret
+
+newline:
+    mov ecx, ""
+    mov ebx, 1
+    int 0x80
     ret
