@@ -110,7 +110,7 @@ void kb_isr() {
     } else if (scancode == 28 && prompt_mode) {
        if (bufcmp("REBOOT\0")) {
             __asm__ __volatile__("mov $0x0, %eax; int $0x80");
-       } else if (bufcmp("DISKS\0")) {
+       } else if (bufcmp("FLOPPY\0")) {
             clear_prompt();
             prompt_mode = 0;
             __asm__ __volatile__("mov $0x7, %eax; int $0x80");
